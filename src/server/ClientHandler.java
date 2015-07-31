@@ -98,10 +98,11 @@ public class ClientHandler implements Runnable {
 			Message query;
 			while ((query = receive()).toString() == null);
 			response = coordinator.process(query);
-			while (response.equals("noleader")) {
-				Thread.sleep(randomInt(150, 300));
-				response = coordinator.process(query);
-			}
+			if (response != null)
+				while (response.equals("noleader")) {
+					Thread.sleep(randomInt(150, 300));
+					response = coordinator.process(query);
+				}
 			
 			send(response);
 			socket.close();
